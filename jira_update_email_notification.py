@@ -5,12 +5,12 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import logging
 
-user = 'candy@opswat.com'
-apikey = 'QCMdjEnrBefZ0RpETly1AEE9'
-server = 'https://opswat.atlassian.net'
+user = 'XXX@example.com'
+apikey = 'ZXCVBNMASDFGHJ'
+server = 'https://example.atlassian.net'
 jql = 'project = TEST AND comment ~ "release update" AND updated >= -1d'
-from_email='candy_twilio@example.com'
-to_emails='lxc1209@gmail.com'
+from_email='test_twilio@example.com'
+to_emails='test@test.com'
 subject='products release date have been updated'
 LOG_FILENAME = "log.txt"
 
@@ -25,7 +25,7 @@ def authJIRA(user,apikey,server):
         if e.status_code == 401:
             logger.error("JIRA login failed, error code is: "+str(e.status_code))
     return None
-        
+
 def createDictFromJiraSearch(jira,jql):
     issues_in_proj = jira.search_issues(jql)
     if issues_in_proj:
@@ -35,7 +35,7 @@ def createDictFromJiraSearch(jira,jql):
             summary = issue.fields.summary
             comments = issue.fields.comment.comments
             for comment in comments:
-                emailContent[summary] = comment.body            
+                emailContent[summary] = comment.body
     else:
         emailContent = "No release update"
         logger.info("email content is: "+emailContent)
@@ -43,7 +43,7 @@ def createDictFromJiraSearch(jira,jql):
 
 def createHTMLFromDict(dictionary):
     html = """<html><table border="1">
-    <tr><th>Product Release</th><th>Updates</th></tr>"""    
+    <tr><th>Product Release</th><th>Updates</th></tr>"""
     for release in dictionary:
         html += "<tr><td>{}</td>".format(release)
         html += "<td>{}</td>".format(dictionary[release])
@@ -83,7 +83,7 @@ def configLogging(LOG_FILENAME):
     return logger
 
 
- 
+
 logger = configLogging(LOG_FILENAME)
 def main():
     jira = authJIRA(user,apikey,server)
